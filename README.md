@@ -96,6 +96,7 @@ If Ticketmaster reserves tickets, move quickly. The hold is usually only about 1
 
 - `https://www.ticketmaster.co.uk/*`
 - `https://www.ticketmaster.com/*`
+- `https://www.ticketmaster.ca/*`
 
 ## Permissions
 

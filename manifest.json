@@ -28,6 +28,7 @@
       "matches": [
         "https://www.ticketmaster.co.uk/*",
         "https://www.ticketmaster.com/*",
+        "https://www.ticketmaster.ca/*",
         "https://www.ticketmaster.it/*"
       ],
       "js": ["content.js"]
