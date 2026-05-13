@@ -13,7 +13,7 @@ const NEGATIVE_AVAILABILITY_PHRASES = [
   "resale tickets will appear below when they are available",
   "tickets will appear below when they are available",
   "no tickets available",
-  "no results available"
+  "no results available",
 ];
 
 const PURCHASE_CTA_PHRASES = [
@@ -24,7 +24,7 @@ const PURCHASE_CTA_PHRASES = [
   "next",
   "place order",
   "add to basket",
-  "add to cart"
+  "add to cart",
 ];
 
 // 🔊 Sound
@@ -52,7 +52,7 @@ function playSound() {
 function sendTelegram() {
   chrome.runtime.sendMessage({
     type: "SEND_TELEGRAM",
-    message: `🎟️ Tickets found!\n${window.location.href}`
+    message: `🎟️ Tickets found!\n${window.location.href}`,
   });
 }
 
@@ -81,11 +81,10 @@ function getPageText() {
 }
 
 function hasPurchaseCTA() {
-  return [...document.querySelectorAll("button, a")]
-    .some((el) => {
-      const label = (el.innerText || "").trim().toLowerCase();
-      return PURCHASE_CTA_PHRASES.some((phrase) => label.includes(phrase));
-    });
+  return [...document.querySelectorAll("button, a")].some((el) => {
+    const label = (el.innerText || "").trim().toLowerCase();
+    return PURCHASE_CTA_PHRASES.some((phrase) => label.includes(phrase));
+  });
 }
 
 // 🎯 Detect tickets
@@ -121,8 +120,9 @@ function hasError() {
 
 // 🔁 Click Find
 function clickFind() {
-  const btn = [...document.querySelectorAll("button")]
-    .find(b => b.innerText.toLowerCase().includes("find tickets"));
+  const btn = [...document.querySelectorAll("button")].find((b) =>
+    b.innerText.toLowerCase().includes("find tickets"),
+  );
 
   if (btn && !btn.disabled) {
     btn.click();
@@ -133,8 +133,9 @@ function clickFind() {
 
 // 🔁 Click Search Again
 function clickSearchAgain() {
-  const btn = [...document.querySelectorAll("button")]
-    .find(b => b.innerText.toLowerCase().includes("search again"));
+  const btn = [...document.querySelectorAll("button")].find((b) =>
+    b.innerText.toLowerCase().includes("search again"),
+  );
 
   if (btn && !btn.disabled) {
     btn.click();
@@ -143,11 +144,21 @@ function clickSearchAgain() {
   return false;
 }
 
+// 🔄 Random page refresh every 4.5–5.5 mins
+function scheduleRefresh() {
+  const delay = randomDelay(270000, 330000);
+
+  console.log(`🔄 Refresh scheduled in ${Math.round(delay / 1000)}s`);
+
+  setTimeout(() => {
+    console.log("🔄 Refreshing page...");
+    location.reload();
+  }, delay);
+}
+
 // 🔁 Main loop
 function runTracker() {
-
   chrome.storage.local.get(["enabled"], (data) => {
-
     if (!data.enabled) {
       isRunning = false;
       return;
@@ -157,7 +168,6 @@ function runTracker() {
     isRunning = true;
 
     try {
-
       if (hasReserved()) {
         notify();
         scheduleNext(12000);
@@ -183,12 +193,10 @@ function runTracker() {
 
       clickFind() || clickSearchAgain();
       scheduleNext(randomDelay(7000, 11000));
-
     } catch (err) {
       console.log("Loop error:", err);
       scheduleNext(randomDelay(10000, 14000));
     }
-
   });
 }
 
@@ -207,4 +215,5 @@ function scheduleNext(delay = randomDelay(7000, 11000)) {
 }
 
 // 🚀 Start loop
+scheduleRefresh();
 runTracker();
